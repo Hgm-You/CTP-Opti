@@ -18,7 +18,7 @@ EXPOSE 8080
 
 
 ENV BUCKET_NAME="bucket_localnote"
-ENV GOOGLE_APPLICATION_CREDENTIALS="/app/coral-melody-442508-n0-a7629f49b000.json"
+ENV GOOGLE_APPLICATION_CREDENTIALS="/vagrant/app/cicd-sa-key.json"
 
 # Commande pour démarrer l'application
 CMD ["python", "app_bucket.py"]
