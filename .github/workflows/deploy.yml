@@ -1,0 +1,35 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # Déclencher l'action uniquement sur la branche "main"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Build and push Docker image
+        run: |
+          gcloud builds submit --tag gcr.io/coral-melody-442508-n0/my-app
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy my-app \
+              --image=gcr.io/coral-melody-442508-n0/my-app \
+              --platform=managed \
+              --region=europe-west1 \
+              --allow-unauthenticated \
+              --set-env-vars BUCKET_NAME="bucket_localnote",GOOGLE_APPLICATION_CREDENTIALS="/app/cicd-sa-key.json"
